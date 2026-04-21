@@ -31,7 +31,8 @@ const registerUser = async (req: Request, res: Response) => {
     password: hassedPassword,
   });
 
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, { httpOnly: true, secure: true,
+sameSite: "none" });
   return res.status(200).json({
     message: "user register successfullly",
     user,
@@ -72,14 +73,16 @@ const loginUser = async (req: Request, res: Response)=>{
 
   const token = await jwt.sign({email}, jwtSecret, {expiresIn: "7d"});
 
-  res.cookie("token", token, {httpOnly:true});
+  res.cookie("token", token, {httpOnly:true, secure: true,
+sameSite: "none"});
   res.status(200).json({
     message:"signin successfully."
   })
 }
 
 const logoutUser = (req: Request, res: Response)=>{
-  res.clearCookie("token");
+  res.clearCookie("token", {httpOnly:true, secure: true,
+sameSite: "none"});
   res.status(200).json({
     message:"logout successfully"
   })
